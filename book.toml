@@ -12,7 +12,7 @@ multilingual = true
 [output.html]
 theme = "theme"
 # default-theme = "rust"
-git-repository-url = "https://github.com/zzy/rust-cookbook-zh-cn"
+git-repository-url = "https://github.com/Orefa/rust-cookbook-zh-cn"
 curly-quotes = true
 mathjax-support = true
 

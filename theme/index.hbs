@@ -104,11 +104,11 @@
             <div class="sidebar-scrollbox">
                 {{#toc}}{{/toc}}
 
-                <div style="text-align: center; margin-bottom: 10px;">
+                {{!-- <div style="text-align: center; margin-bottom: 10px;">
                     <a href="https://budshome.com/books.html" target="_blank">
                         <img src="{{ path_to_root }}css/summary.jpg">
                     </a>
-                </div>
+                </div> --}}
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -143,9 +143,9 @@
                     <h1 class="menu-title">{{ book_title }}</h1>
 
                     <div class="right-buttons">
-                        <a href="https://budshome.com/books.html" target="_blank" title="返回书馆" aria-label="返回书馆">
+                        {{!-- <a href="https://budshome.com/books.html" target="_blank" title="返回书馆" aria-label="返回书馆">
                             <span>书馆</span>
-                        </a>
+                        </a> --}}
                         {{#if git_repository_url}}
                         <a href="{{git_repository_url}}" target="_blank" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa {{git_repository_icon}}"></i>
