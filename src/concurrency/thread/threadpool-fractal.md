@@ -106,7 +106,7 @@ fn main() -> Result<()> {
         let (x, y, pixel) = rx.recv()?;
         img.put_pixel(x, y, pixel);
     }
-    let _ = img.save("output.png")?;
+    let _ = img.save("output.png").unwrap();
     Ok(())
 }
 ```
