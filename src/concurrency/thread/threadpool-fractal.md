@@ -52,7 +52,8 @@ use image::{ImageBuffer, Pixel, Rgb};
 #     };
 #
 #     let (r, g, b) = (normalize(r, factor), normalize(g, factor), normalize(b, factor));
-#     Rgb::from_channels(r, g, b, 0)
+#     // Rgb::from_channels(r, g, b, 0)
+#     Rgb([r, g, b])
 # }
 #
 # // 将茱莉亚集距离映射为强度值
