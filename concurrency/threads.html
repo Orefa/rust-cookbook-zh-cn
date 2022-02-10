@@ -429,7 +429,8 @@ use image::{ImageBuffer, Pixel, Rgb};
 </span><span class="boring">    };
 </span><span class="boring">
 </span><span class="boring">    let (r, g, b) = (normalize(r, factor), normalize(g, factor), normalize(b, factor));
-</span><span class="boring">    Rgb::from_channels(r, g, b, 0)
+</span><span class="boring">    // Rgb::from_channels(r, g, b, 0)
+</span><span class="boring">    Rgb([r, g, b])
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">// 将茱莉亚集距离映射为强度值
@@ -482,7 +483,7 @@ fn main() -&gt; Result&lt;()&gt; {
         let (x, y, pixel) = rx.recv()?;
         img.put_pixel(x, y, pixel);
     }
-    let _ = img.save(&quot;output.png&quot;)?;
+    let _ = img.save(&quot;output.png&quot;).unwrap();
     Ok(())
 }
 </code></pre></pre>
