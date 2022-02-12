@@ -2077,12 +2077,13 @@ fn main() {
 <p><a href="https://docs.rs/glob/*/glob/fn.glob_with.html"><code>glob::glob_with</code></a> 在当前目录中查找 jpeg 图像文件，<code>rayon</code> 通过 <a href="https://docs.rs/rayon/*/rayon/iter/trait.IntoParallelRefIterator.html#tymethod.par_iter"><code>par_iter</code></a> 方法调用 <a href="https://docs.rs/image/*/image/enum.DynamicImage.html#method.resize"><code>DynamicImage::resize</code></a>，并行地调整图像大小。</p>
 <pre><pre class="playground"><code class="language-rust edition2018 no_run"><span class="boring">use error_chain::error_chain;
 </span>
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::fs::create_dir_all;
 
 <span class="boring">use error_chain::ChainedError;
 </span>use glob::{glob_with, MatchOptions};
-use image::{FilterType, ImageError};
+use image::{ImageError};
+use image::imageops::FilterType;
 use rayon::prelude::*;
 
 <span class="boring">error_chain! {
@@ -2129,10 +2130,13 @@ where
     PB: AsRef&lt;Path&gt;,
 {
     let img = image::open(original.as_ref())?;
-    let file_path = thumb_dir.as_ref().join(original);
-
-    Ok(img.resize(longest_edge, longest_edge, FilterType::Nearest)
-        .save(file_path)?)
+    if let Some(file_name) = original.as_ref().file_name() {
+        let file_path = thumb_dir.as_ref().join(PathBuf::from(file_name));
+        println!(&quot;{}&quot;, file_path.display());
+        img.resize(longest_edge, longest_edge, FilterType::Nearest)
+            .save(file_path)?
+    }
+    Ok(())
 }
 </code></pre></pre>
 <!--
