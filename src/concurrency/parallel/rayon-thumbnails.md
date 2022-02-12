@@ -15,12 +15,13 @@
 ```rust,edition2018,no_run
 # use error_chain::error_chain;
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::fs::create_dir_all;
 
 # use error_chain::ChainedError;
 use glob::{glob_with, MatchOptions};
-use image::{FilterType, ImageError};
+use image::{ImageError};
+use image::imageops::FilterType;
 use rayon::prelude::*;
 
 # error_chain! {
@@ -67,10 +68,13 @@ where
     PB: AsRef<Path>,
 {
     let img = image::open(original.as_ref())?;
-    let file_path = thumb_dir.as_ref().join(original);
-
-    Ok(img.resize(longest_edge, longest_edge, FilterType::Nearest)
-        .save(file_path)?)
+    if let Some(file_name) = original.as_ref().file_name() {
+        let file_path = thumb_dir.as_ref().join(PathBuf::from(file_name));
+        println!("{}", file_path.display());
+        img.resize(longest_edge, longest_edge, FilterType::Nearest)
+            .save(file_path)?
+    }
+    Ok(())
 }
 ```
 
