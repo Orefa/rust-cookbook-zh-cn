@@ -12,7 +12,7 @@
 
 ```rust,no_run
 
-use rusqlite::NO_PARAMS;
+// use rusqlite::NO_PARAMS;
 use rusqlite::{Connection, Result};
 use std::collections::HashMap;
 
@@ -49,7 +49,7 @@ fn main() -> Result<()> {
          ON cc.id = c.color_id;",
     )?;
 
-    let cats = stmt.query_map(NO_PARAMS, |row| {
+    let cats = stmt.query_map([], |row| {
         Ok(Cat {
             name: row.get(0)?,
             color: row.get(1)?,
