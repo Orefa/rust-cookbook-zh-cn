@@ -2476,7 +2476,7 @@ Keep lines sorted.
 <p>使用 <code>rusqlite</code> crate 打开 SQLite 数据库连接。Windows 上编译 <code>rusqlite</code> crate 请参考<a href="https://github.com/jgallagher/rusqlite#user-content-notes-on-building-rusqlite-and-libsqlite3-sys">文档</a>。</p>
 <p>如果数据库不存在，<a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.open"><code>Connection::open</code></a> 方法将创建它。</p>
 <pre><pre class="playground"><code class="language-rust edition2018 no_run">use rusqlite::{Connection, Result};
-use rusqlite::NO_PARAMS;
+// use rusqlite::NO_PARAMS;
 
 fn main() -&gt; Result&lt;()&gt; {
     let conn = Connection::open(&quot;cats.db&quot;)?;
@@ -2486,7 +2486,7 @@ fn main() -&gt; Result&lt;()&gt; {
              id integer primary key,
              name text not null unique
          )&quot;,
-        NO_PARAMS,
+         [],
     )?;
     conn.execute(
         &quot;create table if not exists cats (
@@ -2494,7 +2494,7 @@ fn main() -&gt; Result&lt;()&gt; {
              name text not null,
              color_id integer not null references cat_colors(id)
          )&quot;,
-        NO_PARAMS,
+         [],
     )?;
 
     Ok(())
@@ -2509,7 +2509,7 @@ fn main() -&gt; Result&lt;()&gt; {
 <p><a href="https://crates.io/crates/rusqlite/"><img src="https://badge-cache.kominick.com/crates/v/rusqlite.svg?label=rusqlite" alt="rusqlite-badge" /></a> <a href="https://crates.io/categories/database"><img src="https://badge-cache.kominick.com/badge/database--x.svg?style=social" alt="cat-database-badge" /></a></p>
 <p><a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.open"><code>Connection::open</code></a> 将打开在前一章节实例中创建的数据库 <code>cats</code> 的连接。下面的实例使用 <code>Connection</code> 的 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.execute"><code>execute</code></a> 方法将数据插入 <code>cat_colors</code> 和 <code>cats</code> 两张表中。首先，将数据插入到 <code>cat_colors</code> 表中。随后，使用 <code>Connection</code> 的 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.last_insert_rowid"><code>last_insert_rowid</code></a> 方法来获取 <code>cat_colors</code> 表最后插入记录的 <code>id</code>。当向 <code>cats</code> 表中插入数据时，使用此 <code>id</code>。然后，使用 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.prepare"><code>prepare</code></a> 方法准备执行 select 查询操作，该方法提供 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Statement.html"><code>statement</code></a> 结构体。最后，使用 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Statement.html"><code>statement</code></a> 的 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Statement.html#method.query_map"><code>query_map</code></a> 方法执行查询。</p>
 <pre><pre class="playground"><code class="language-rust no_run">
-use rusqlite::NO_PARAMS;
+// use rusqlite::NO_PARAMS;
 use rusqlite::{Connection, Result};
 use std::collections::HashMap;
 
@@ -2546,7 +2546,7 @@ fn main() -&gt; Result&lt;()&gt; {
          ON cc.id = c.color_id;&quot;,
     )?;
 
-    let cats = stmt.query_map(NO_PARAMS, |row| {
+    let cats = stmt.query_map([], |row| {
         Ok(Cat {
             name: row.get(0)?,
             color: row.get(1)?,
@@ -2570,7 +2570,7 @@ fn main() -&gt; Result&lt;()&gt; {
 <p><a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.open"><code>Connection::open</code></a> 将打开来自前述实例的数据库 <code>cats.db</code>。</p>
 <p>使用 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Connection.html#method.transaction"><code>Connection::transaction</code></a> 开始事务，除非使用 <a href="https://docs.rs/rusqlite/*/rusqlite/struct.Transaction.html#method.commit"><code>Transaction::commit</code></a> 显式提交，否则事务将回滚。</p>
 <p>在下面的实例中，颜色表对颜色名称具有唯一性约束。当尝试插入重复的颜色时，事务会回滚。</p>
-<pre><pre class="playground"><code class="language-rust edition2018 no_run">use rusqlite::{Connection, Result, NO_PARAMS};
+<pre><pre class="playground"><code class="language-rust edition2018 no_run">use rusqlite::{Connection, Result};
 
 fn main() -&gt; Result&lt;()&gt; {
     let mut conn = Connection::open(&quot;cats.db&quot;)?;
@@ -2586,7 +2586,7 @@ fn main() -&gt; Result&lt;()&gt; {
 fn successful_tx(conn: &amp;mut Connection) -&gt; Result&lt;()&gt; {
     let tx = conn.transaction()?;
 
-    tx.execute(&quot;delete from cat_colors&quot;, NO_PARAMS)?;
+    tx.execute(&quot;delete from cat_colors&quot;, [])?;
     tx.execute(&quot;insert into cat_colors (name) values (?1)&quot;, &amp;[&amp;&quot;lavender&quot;])?;
     tx.execute(&quot;insert into cat_colors (name) values (?1)&quot;, &amp;[&amp;&quot;blue&quot;])?;
 
@@ -2596,7 +2596,7 @@ fn successful_tx(conn: &amp;mut Connection) -&gt; Result&lt;()&gt; {
 fn rolled_back_tx(conn: &amp;mut Connection) -&gt; Result&lt;()&gt; {
     let tx = conn.transaction()?;
 
-    tx.execute(&quot;delete from cat_colors&quot;, NO_PARAMS)?;
+    tx.execute(&quot;delete from cat_colors&quot;, [])?;
     tx.execute(&quot;insert into cat_colors (name) values (?1)&quot;, &amp;[&amp;&quot;lavender&quot;])?;
     tx.execute(&quot;insert into cat_colors (name) values (?1)&quot;, &amp;[&amp;&quot;blue&quot;])?;
     tx.execute(&quot;insert into cat_colors (name) values (?1)&quot;, &amp;[&amp;&quot;lavender&quot;])?;
