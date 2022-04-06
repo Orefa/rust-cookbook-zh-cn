@@ -23,7 +23,7 @@ use log4rs::config::{Appender, Config, Root};
 # error_chain! {
 #     foreign_links {
 #         Io(std::io::Error);
-#         LogConfig(log4rs::config::Errors);
+#         LogConfig(log4rs::config::runtime::ConfigErrors);
 #         SetLogger(log::SetLoggerError);
 #     }
 # }
