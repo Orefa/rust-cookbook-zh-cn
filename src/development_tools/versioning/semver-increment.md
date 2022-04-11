@@ -13,9 +13,9 @@
 注意：根据[语义化版本控制规范][Semantic Versioning Specification]，增加副（次要）版本号时会将补丁（修订）版本号重置为 0，增加主版本号时会将副（次要）版本号和补丁（修订）版本号都重置为 0。
 
 ```rust,edition2018
-use semver::{Version, SemVerError};
+use semver::{Version, Error, Prerelease,BuildMetadata};
 
-fn main() -> Result<(), SemVerError> {
+fn main() -> Result<(), Error> {
     let mut parsed_version = Version::parse("0.2.6")?;
 
     assert_eq!(
@@ -24,24 +24,48 @@ fn main() -> Result<(), SemVerError> {
             major: 0,
             minor: 2,
             patch: 6,
-            pre: vec![],
-            build: vec![],
+            pre: Prerelease::EMPTY,
+            build: BuildMetadata::EMPTY,
         }
     );
 
-    parsed_version.increment_patch();
+
+    increment_patch(&mut parsed_version);
     assert_eq!(parsed_version.to_string(), "0.2.7");
     println!("New patch release: v{}", parsed_version);
 
-    parsed_version.increment_minor();
+    increment_minor(&mut parsed_version);
+    parsed_version.patch = 0;
     assert_eq!(parsed_version.to_string(), "0.3.0");
     println!("New minor release: v{}", parsed_version);
 
-    parsed_version.increment_major();
+    increment_major(&mut parsed_version);
     assert_eq!(parsed_version.to_string(), "1.0.0");
     println!("New major release: v{}", parsed_version);
 
     Ok(())
+}
+
+// https://github.com/dtolnay/semver/issues/243
+fn increment_patch(v: &mut Version) {
+    v.patch += 1;
+    v.pre = Prerelease::EMPTY;
+    v.build = BuildMetadata::EMPTY;
+}
+
+fn increment_minor(v: &mut Version) {
+    v.minor += 1;
+    v.patch = 0;
+    v.pre = Prerelease::EMPTY;
+    v.build = BuildMetadata::EMPTY;
+}
+
+fn increment_major(v: &mut Version) {
+    v.major += 1;
+    v.minor = 0;
+    v.patch = 0;
+    v.pre = Prerelease::EMPTY;
+    v.build = BuildMetadata::EMPTY;
 }
 ```
 
