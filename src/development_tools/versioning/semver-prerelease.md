@@ -11,14 +11,14 @@
 给定两个版本，使用 [`is_prerelease`] 断言一个是预发布，另一个不是。
 
 ```rust,edition2018
-use semver::{Version, SemVerError};
+use semver::{Version, Error};
 
-fn main() -> Result<(), SemVerError> {
+fn main() -> Result<(), Error> {
     let version_1 = Version::parse("1.0.0-alpha")?;
     let version_2 = Version::parse("1.0.0")?;
 
-    assert!(version_1.is_prerelease());
-    assert!(!version_2.is_prerelease());
+    assert!(!version_1.pre.is_empty());
+    assert!(version_2.pre.is_empty());
 
     Ok(())
 }
