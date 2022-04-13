@@ -17,8 +17,8 @@ use semver::{Version, VersionReq};
 #
 # error_chain! {
 #     foreign_links {
-#         SemVer(semver::SemVerError);
-#         SemVerReq(semver::ReqParseError);
+#         SemVer(semver::Error);
+#         // SemVerReq(semver::ReqParseError);
 #     }
 # }
 
