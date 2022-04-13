@@ -20,8 +20,8 @@ use semver::{Version, VersionReq};
 #     foreign_links {
 #         Io(std::io::Error);
 #         Utf8(std::string::FromUtf8Error);
-#         SemVer(semver::SemVerError);
-#         SemVerReq(semver::ReqParseError);
+#         SemVer(semver::Error);
+#         // SemVerReq(semver::ReqParseError);
 #     }
 # }
 
