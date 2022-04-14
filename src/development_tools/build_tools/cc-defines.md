@@ -19,7 +19,7 @@ version = "1.0.2"
 build = "build.rs"
 
 [build-dependencies]
-cc = "1"
+cc = { version = "1.0", features = ["parallel"] }
 ```
 
 ### `build.rs`

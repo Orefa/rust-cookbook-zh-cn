@@ -22,10 +22,10 @@
 build = "build.rs"
 
 [build-dependencies]
-cc = "1"
+cc = { version = "1.0", features = ["parallel"] }
 
 [dependencies]
-error-chain = "0.11"
+error-chain = "0.12.4"
 ```
 
 ### `build.rs`
